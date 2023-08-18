@@ -82,7 +82,7 @@ def convert(config):
         '',
         'SEND_NAME1',
         'SEND_NAME2',
-        'SEND_STREET'
+        'SEND_STREET',
         'SEND_HOUSENUMBER',
         'SEND_PLZ',
         'SEND_CITY',
@@ -108,31 +108,43 @@ def convert(config):
          
         tindieExport = [row for row in reader]
 
+    # Iterate through all rows, but only care about unique ones
+    for row in tindieExport:
+        if row['First Name']:
 
-    # Fill one row of data
-    dhlExportSingleRow = {
-        '': '',
-        'SEND_NAME1':       config['sender']['name'],
-        'SEND_NAME2':       '',
-        'SEND_STREET':      '',
-        'SEND_HOUSENUMBER': '',
-        'SEND_PLZ':         '',
-        'SEND_CITY':        '',
-        'SEND_COUNTRY':     '',
-        'RECV_NAME1':       '',
-        'RECV_NAME2':       '',
-        'RECV_STREET':      '',
-        'RECV_HOUSENUMBER': '',
-        'RECV_PLZ':         '',
-        'RECV_CITY':        '',
-        'RECV_COUNTRY':     '',
-        'PRODUCT':          '',
-        'COUPON':           '',
-        'SEND_EMAIL':       ''
-    }
+            print('Dumping Row for ' + row['First Name'] + ' ' + row['Last Name'])
 
-    # Add data to new shipping row
-    dhlExportData.append(dhlExportSingleRow)
+            # Find country code (No idea what other values DHL accepts)
+            countryCode = ''
+            if row['Country'] == 'Germany':
+                countryCode = 'DEU'
+            elif row['Country'] == 'United States of America':
+                countryCode = 'USA'
+
+            # Fill one row of data
+            dhlExportSingleRow = {
+                '': '',
+                'SEND_NAME1':       config['sender']['name'],
+                'SEND_NAME2':       config['sender']['name2'],
+                'SEND_STREET':      config['sender']['street'],
+                'SEND_HOUSENUMBER': config['sender']['house number'],
+                'SEND_PLZ':         config['sender']['zipcode'],
+                'SEND_CITY':        config['sender']['city'],
+                'SEND_COUNTRY':     config['sender']['country'],
+                'RECV_NAME1':       row['First Name'] + ' ' + row['Last Name'],
+                'RECV_NAME2':       row['Company'],
+                'RECV_STREET':      row['Street'],
+                'RECV_HOUSENUMBER': row[''],
+                'RECV_PLZ':         row['Postal/Zip Code'],
+                'RECV_CITY':        row['City'],
+                'RECV_COUNTRY':     countryCode,
+                'PRODUCT':          '',
+                'COUPON':           '',
+                'SEND_EMAIL':       config['sender']['email']
+            }
+
+            # Add data to new shipping row
+            dhlExportData.append(dhlExportSingleRow)
 
     # Create new output file
     output_file = os.path.join(output_path, "TinDHL.csv")
@@ -173,6 +185,7 @@ def main():
         print(user_config_path)
 
         config['sender'] = {'name':             'Danny Default',
+                            'name2':            'Dannies Co.',
                             'street':           'Rad Rd',
                             'house number':     '666',
                             'zipcode':          '12345',
