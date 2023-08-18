@@ -118,8 +118,11 @@ def convert(config):
             countryCode = ''
             if row['Country'] == 'Germany':
                 countryCode = 'DEU'
+                # House number at the end
+                
             elif row['Country'] == 'United States of America':
                 countryCode = 'USA'
+                # House number in front
 
             # Fill one row of data
             dhlExportSingleRow = {
