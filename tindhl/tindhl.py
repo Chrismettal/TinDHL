@@ -137,7 +137,7 @@ def convert(config):
                 'RECV_NAME1':       row['First Name'] + ' ' + row['Last Name'],
                 'RECV_NAME2':       row['Company'],
                 'RECV_STREET':      row['Street'],
-                'RECV_HOUSENUMBER': row[''],
+                'RECV_HOUSENUMBER': row['Street'],
                 'RECV_PLZ':         row['Postal/Zip Code'],
                 'RECV_CITY':        row['City'],
                 'RECV_COUNTRY':     countryCode,
