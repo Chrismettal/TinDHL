@@ -118,11 +118,26 @@ def convert(config):
             countryCode = ''
             if row['Country'] == 'Germany':
                 countryCode = 'DEU'
-                # House number at the end
+                numberPos   = 'end'
                 
             elif row['Country'] == 'United States of America':
                 countryCode = 'USA'
-                # House number in front
+                numberPos   = 'front'
+
+            elif row['Country'] == 'Italy':
+                countryCode = 'ITA'
+                numberPos   = 'end'
+
+            # Split street and housenumber if possible
+            if numberPos == 'end':
+                houseNumber = row['Street'].split(sep= ' ')[-1]
+                street      = row['Street'].removesuffix(' ' + houseNumber)
+            elif numberPos == 'front':
+                houseNumber = row['Street'].split(sep= ' ')[0]
+                street      = row['Street'].removeprefix(houseNumber + ' ')
+            else:
+                houseNumber = row['Street'] 
+                street      = row['Street']
 
             # Fill one row of data
             dhlExportSingleRow = {
@@ -136,8 +151,8 @@ def convert(config):
                 'SEND_COUNTRY':     config['sender']['country'],
                 'RECV_NAME1':       row['First Name'] + ' ' + row['Last Name'],
                 'RECV_NAME2':       row['Company'],
-                'RECV_STREET':      row['Street'],
-                'RECV_HOUSENUMBER': row['Street'],
+                'RECV_STREET':      street,
+                'RECV_HOUSENUMBER': houseNumber,
                 'RECV_PLZ':         row['Postal/Zip Code'],
                 'RECV_CITY':        row['City'],
                 'RECV_COUNTRY':     countryCode,
