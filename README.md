@@ -10,6 +10,8 @@ This is a work in progress.
 
 This tool converts Tindie order exports into CSVs that DHl understands for bulk online label creation. Lots of stuff can't be filled out using this, but the more you can automatically fill out the less stuff you can do wrong manually.
 
+The resulting CSV is CP1252 encoded, as DHL specifies.
+
 **If you like my work please consider [supporting me](https://github.com/Chrismettal#donations)!**
 
 ## Installation

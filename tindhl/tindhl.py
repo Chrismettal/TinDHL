@@ -166,7 +166,7 @@ def convert(config):
 
     # Create new output file
     output_file = os.path.join(output_path, "TinDHL.csv")
-    with open(output_file, 'w') as outfile:
+    with open(output_file, 'w', encoding='CP1252') as outfile:
         writer = csv.DictWriter(outfile, dhlExportHeader, delimiter=',')
         
         writer.writeheader()
