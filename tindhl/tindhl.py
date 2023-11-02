@@ -127,6 +127,9 @@ def convert(config):
             elif row['Country'] == 'Italy':
                 countryCode = 'ITA'
                 numberPos   = 'end'
+            else:
+                countryCode = ''
+                numberPos   = 'end'
 
             # Split street and housenumber if possible
             if numberPos == 'end':
@@ -166,7 +169,7 @@ def convert(config):
 
     # Create new output file
     output_file = os.path.join(output_path, "TinDHL.csv")
-    with open(output_file, 'w', encoding='CP1252') as outfile:
+    with open(output_file, 'w', encoding='UTF-8') as outfile:
         writer = csv.DictWriter(outfile, dhlExportHeader, delimiter=',')
         
         writer.writeheader()
