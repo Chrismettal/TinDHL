@@ -333,10 +333,10 @@ def convert(config):
             writer.writerows(dhlExportData)
 
     # Create new output file for DEPost only when valid receiver rows exist
-    if len(dePostExportdata) >= 3:
+    if len(dePostExportData) >= 3:
         output_file = os.path.join(output_path, "TinDEPost.csv")
         with open(output_file, 'w', encoding='UTF-8') as outfile:
-            writer = csv.DictWriter(outfile, dePostExportHeader, delimiter=',')
+            writer = csv.DictWriter(outfile, dePostExportHeader, delimiter=';')
             
             writer.writeheader()
             writer.writerows(dePostExportData)
