@@ -116,17 +116,119 @@ def convert(config):
 
             # Find country code (No idea what other values DHL accepts)
             countryCode = ''
-            if row['Country'] == 'Germany':
-                countryCode = 'DEU'
-                numberPos   = 'end'
-                
-            elif row['Country'] == 'United States of America':
+            
+            if row['Country'] == 'United States of America':
                 countryCode = 'USA'
                 numberPos   = 'front'
+
+            elif row['Country'] == 'Austria':
+                countryCode = 'AUT'
+                numberPos   = 'end'
+
+            elif row['Country'] == 'Belgium':
+                countryCode = 'BEL'
+                numberPos   = 'end'
+
+            elif row['Country'] == 'Bulgaria':
+                countryCode = 'BGR'
+                numberPos   = 'end'
+
+            elif row['Country'] == 'Croatia':
+                countryCode = 'HRV'
+                numberPos   = 'end'
+
+            elif row['Country'] == 'Cyprus':
+                countryCode = 'CYP'
+                numberPos   = 'end'
+
+            elif row['Country'] == 'Czech Republic':
+                countryCode = 'CZE'
+                numberPos   = 'end'
+
+            elif row['Country'] == 'Denmark':
+                countryCode = 'DNK'
+                numberPos   = 'end'
+
+            elif row['Country'] == 'Estonia':
+                countryCode = 'EST'
+                numberPos   = 'end'
+
+            elif row['Country'] == 'Finland':
+                countryCode = 'FIN'
+                numberPos   = 'end'
+
+            elif row['Country'] == 'France':
+                countryCode = 'FRA'
+                numberPos   = 'end'
+
+            elif row['Country'] == 'Germany':
+                countryCode = 'DEU'
+                numberPos   = 'end'
+
+            elif row['Country'] == 'Greece':
+                countryCode = 'GRC'
+                numberPos   = 'end'
+
+            elif row['Country'] == 'Hungary':
+                countryCode = 'HUN'
+                numberPos   = 'end'
+
+            elif row['Country'] == 'Ireland':
+                countryCode = 'IRL'
+                numberPos   = 'end'
 
             elif row['Country'] == 'Italy':
                 countryCode = 'ITA'
                 numberPos   = 'end'
+
+            elif row['Country'] == 'Latvia':
+                countryCode = 'LVA'
+                numberPos   = 'end'
+
+            elif row['Country'] == 'Lithuania':
+                countryCode = 'LTU'
+                numberPos   = 'end'
+
+            elif row['Country'] == 'Luxembourg':
+                countryCode = 'LUX'
+                numberPos   = 'end'
+
+            elif row['Country'] == 'Malta':
+                countryCode = 'MLT'
+                numberPos   = 'end'
+
+            elif row['Country'] == 'Netherlands':
+                countryCode = 'NLD'
+                numberPos   = 'end'
+
+            elif row['Country'] == 'Poland':
+                countryCode = 'POL'
+                numberPos   = 'end'
+
+            elif row['Country'] == 'Portugal':
+                countryCode = 'PRT'
+                numberPos   = 'end'
+
+            elif row['Country'] == 'Romania':
+                countryCode = 'ROU'
+                numberPos   = 'end'
+
+            elif row['Country'] == 'Slovakia':
+                countryCode = 'SVK'
+                numberPos   = 'end'
+
+            elif row['Country'] == 'Slovenia':
+                countryCode = 'SVN'
+                numberPos   = 'end'
+
+            elif row['Country'] == 'Spain':
+                countryCode = 'ESP'
+                numberPos   = 'end'
+
+            elif row['Country'] == 'Sweden':
+                countryCode = 'SWE'
+                numberPos   = 'end'
+
             else:
                 countryCode = ''
                 numberPos   = 'end'
@@ -232,6 +334,4 @@ def main():
 
 #############################################################################
 ##                         main() idiom                                    ##
-#############################################################################
-if __name__ == "__main__":
-    main()
+#################################################a
