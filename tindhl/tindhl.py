@@ -77,7 +77,7 @@ def convert(config):
     global input_file
     global output_path
 
-    # Generate default output header
+    # Generate default output header for DHL packages
     dhlExportHeader = [
         '',
         'SEND_NAME1',
@@ -99,8 +99,36 @@ def convert(config):
         'SEND_EMAIL'
     ]
 
-    # Generate empty list
+    # Generate default output header for DEPost letters
+    dePostExportHeader = [
+        'NAME',
+        'ZUSATZ',
+        'STRASSE',
+        'NUMMER',
+        'PLZ',
+        'STADT',
+        'LAND',
+        'ADRESS_TYP',
+        'REFERENZ',
+    ]
+
+    # Generate empty lists
     dhlExportData = []
+    dePostExportData = []
+
+    # Fill DEPost first row with sender data
+    dePostSingleRow = {
+                    'NAME':             config['sender']['name'],
+                    'ZUSATZ':           config['sender']['name2'],
+                    'STRASSE':          config['sender']['street'],
+                    'NUMMER':           config['sender']['house number'],
+                    'PLZ':              config['sender']['zipcode'],
+                    'STADT':            config['sender']['city'],
+                    'LAND':             'DEU',
+                    'ADRESS_TYP':       'HOUSE',
+                    'REFERENZ':         '',
+                }
+    dePostExportData.append(dePostSingleRow)
 
     # Read in Tindie data
     with open(input_file, newline='') as infile:
@@ -110,6 +138,11 @@ def convert(config):
 
     # Iterate through all rows, but only care about unique ones
     for row in tindieExport:
+
+        # Reset found states
+        DhlFound    = false
+        DePostFound = false
+
         if row['First Name']:
 
             print('Dumping Row for ' + row['First Name'] + ' ' + row['Last Name'])
@@ -244,38 +277,69 @@ def convert(config):
                 houseNumber = row['Street'] 
                 street      = row['Street']
 
-            # Fill one row of data
-            dhlExportSingleRow = {
-                '': '',
-                'SEND_NAME1':       config['sender']['name'],
-                'SEND_NAME2':       config['sender']['name2'],
-                'SEND_STREET':      config['sender']['street'],
-                'SEND_HOUSENUMBER': config['sender']['house number'],
-                'SEND_PLZ':         config['sender']['zipcode'],
-                'SEND_CITY':        config['sender']['city'],
-                'SEND_COUNTRY':     config['sender']['country'],
-                'RECV_NAME1':       row['First Name'] + ' ' + row['Last Name'],
-                'RECV_NAME2':       row['Company'],
-                'RECV_STREET':      street,
-                'RECV_HOUSENUMBER': houseNumber,
-                'RECV_PLZ':         row['Postal/Zip Code'],
-                'RECV_CITY':        row['City'],
-                'RECV_COUNTRY':     countryCode,
-                'PRODUCT':          '',
-                'COUPON':           '',
-                'SEND_EMAIL':       config['sender']['email']
-            }
+            # Detect if DHL package or DEPost letter is required
+            if 'brief' in row['Shipping Method'] or 'Brief' in row['Shipping Method']:
+                DePostFound = true
+            else:
+                DhlFound    = true
 
-            # Add data to new shipping row
-            dhlExportData.append(dhlExportSingleRow)
+            if DhlFound:
+                # Fill one row of data
+                dhlExportSingleRow = {
+                    '': '',
+                    'SEND_NAME1':       config['sender']['name'],
+                    'SEND_NAME2':       config['sender']['name2'],
+                    'SEND_STREET':      config['sender']['street'],
+                    'SEND_HOUSENUMBER': config['sender']['house number'],
+                    'SEND_PLZ':         config['sender']['zipcode'],
+                    'SEND_CITY':        config['sender']['city'],
+                    'SEND_COUNTRY':     config['sender']['country'],
+                    'RECV_NAME1':       row['First Name'] + ' ' + row['Last Name'],
+                    'RECV_NAME2':       row['Company'],
+                    'RECV_STREET':      street,
+                    'RECV_HOUSENUMBER': houseNumber,
+                    'RECV_PLZ':         row['Postal/Zip Code'],
+                    'RECV_CITY':        row['City'],
+                    'RECV_COUNTRY':     countryCode,
+                    'PRODUCT':          '',
+                    'COUPON':           '',
+                    'SEND_EMAIL':       config['sender']['email']
+                }
 
-    # Create new output file
-    output_file = os.path.join(output_path, "TinDHL.csv")
-    with open(output_file, 'w', encoding='UTF-8') as outfile:
-        writer = csv.DictWriter(outfile, dhlExportHeader, delimiter=',')
-        
-        writer.writeheader()
-        writer.writerows(dhlExportData)
+                # Add data to new shipping row
+                dhlExportData.append(dhlExportSingleRow)
+
+            elif DePostFound:
+                dePostSingleRow = {
+                    'NAME':             row['First Name'] + ' ' + row['Last Name'],
+                    'ZUSATZ':           row['Company'],
+                    'STRASSE':          street,
+                    'NUMMER':           houseNumber,
+                    'PLZ':              row['Postal/Zip Code'],
+                    'STADT':            row['City'],
+                    'LAND':             countryCode,
+                    'ADRESS_TYP':       'HOUSE',
+                    'REFERENZ':         '',
+                }
+                dePostExportData.append(dePostSingleRow)
+
+    # Create new output file for DHL only when valid receiver rows exist
+    if len(dhlExportData) >= 2:
+        output_file = os.path.join(output_path, "TinDHL.csv")
+        with open(output_file, 'w', encoding='UTF-8') as outfile:
+            writer = csv.DictWriter(outfile, dhlExportHeader, delimiter=',')
+            
+            writer.writeheader()
+            writer.writerows(dhlExportData)
+
+    # Create new output file for DEPost only when valid receiver rows exist
+    if len(dePostExportdata) >= 3:
+        output_file = os.path.join(output_path, "TinDEPost.csv")
+        with open(output_file, 'w', encoding='UTF-8') as outfile:
+            writer = csv.DictWriter(outfile, dePostExportHeader, delimiter=',')
+            
+            writer.writeheader()
+            writer.writerows(dePostExportData)
 
 
     print("---")
