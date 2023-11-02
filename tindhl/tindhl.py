@@ -140,8 +140,8 @@ def convert(config):
     for row in tindieExport:
 
         # Reset found states
-        DhlFound    = false
-        DePostFound = false
+        DhlFound    = False
+        DePostFound = False
 
         if row['First Name']:
 
@@ -279,9 +279,9 @@ def convert(config):
 
             # Detect if DHL package or DEPost letter is required
             if 'brief' in row['Shipping Method'] or 'Brief' in row['Shipping Method']:
-                DePostFound = true
+                DePostFound = True
             else:
-                DhlFound    = true
+                DhlFound    = True
 
             if DhlFound:
                 # Fill one row of data
